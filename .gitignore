@@ -1,0 +1,9 @@
+.gradle
+.settings
+.classpath
+.project
+
+build
+bin
+
+mcloader*.jar

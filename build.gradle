@@ -1,0 +1,36 @@
+plugins {
+	id 'java-library'
+	id 'maven-publish'
+}
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
+repositories {
+    maven { url = 'https://maven.mgnet.work'}
+}
+
+// Publishing
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = 'de.pfannekuchen'
+            artifactId = 'mcloader'
+            version = '1.0.0-SNAPSHOT'
+
+            from components.java
+        }
+    }
+}
+
+project.getAllTasks(true).each { key, val -> 
+	val.each {
+		it.group = null
+	}	
+}
+
+tasks.getByName("build").group = "mcloader"
+tasks.getByName("javadoc").group = "mcloader"
+tasks.getByName("publishToMavenLocal").group = "mcloader"
