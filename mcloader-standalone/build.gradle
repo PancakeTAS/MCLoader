@@ -21,7 +21,6 @@ jar {
 repositories {
 	maven { url = "https://mgnet.work/repo" }
 	mavenCentral()
-	mavenLocal()
 }
 
 // Export Group
