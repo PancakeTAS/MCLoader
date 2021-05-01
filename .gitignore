@@ -1,0 +1,16 @@
+.gradle
+.settings
+.classpath
+.project
+build
+bin
+*.launch
+run
+Private.java
+
+.idea/
+Fabric-1.14.4/.gradle/
+Fabric-1.14.4/build/
+Fabric-1.14.4/run/
+out/
+*.jar
