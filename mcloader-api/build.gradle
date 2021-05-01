@@ -1,0 +1,25 @@
+// Java Project
+plugins {
+	id 'java-library'
+	id 'maven-publish'
+}
+
+// Group and Version for Gradle Plugin
+group = 'de.pfannekuchen.mcloader'
+version = '1.0.0-SNAPSHOT'
+
+// Export Location
+jar {
+	destinationDirectory = new File("../")
+	archiveFileName = "mcloader-api.jar"
+}
+
+// Publishing
+publishing {
+	publications {
+    	mavenJava(MavenPublication) {
+        	from components.java
+        	artifactId = 'mcloader-api'
+    	}
+	}
+}
