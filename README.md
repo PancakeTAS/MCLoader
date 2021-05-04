@@ -20,3 +20,13 @@ You can only add 1 Mod, to a running instance. If you want to change the Mod, yo
 
 ### The where I select my mod does not show
 This means, that MCLoader couldn't find a running Minecraft Instance. Try starting Minecraft without Forge or any modifications.
+
+### Contributing
+
+If you want to contribute you can always do so with a Pull-Request.
+This Project uses Gradle 7, and Subprojects. If you are using Eclipse, open the Project Explorer instead of the Package Explorer!
+Import the Project as usual but select Gradle 7 instead of Gradle-Wrapper. 
+
+mcloader-api: This is the API that is going to be visible for the Modder, please keep this Code as simple as possible and hide Classes/Methods/Fields if not ment to be accessed.
+mcloader-gradle: This is the Gradle Plugin that is used to launch the Client.
+mcloader-standalone: This is the Program that the End-User will launch. Please keep the UI User-Friendly and Simple. Focus on Compatibility, for example, with a Java Check, that searches for Compatible Java Installations.
