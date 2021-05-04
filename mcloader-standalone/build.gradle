@@ -6,7 +6,7 @@ plugins {
 
 // Group and Version for Gradle Plugin
 group = 'de.pfannekuchen.mcloader'
-version = '1.0.0-SNAPSHOT'
+version = '1.0.0'
 
 // Agent-Main for MCLoader
 jar {
@@ -26,6 +26,12 @@ repositories {
 // Export Group
 configurations {
 	include
+}
+
+// Java 8
+sourceCompatibility = targetCompatibility = '1.8'
+compileJava {
+    sourceCompatibility = targetCompatibility = '1.8'
 }
 
 dependencies {
