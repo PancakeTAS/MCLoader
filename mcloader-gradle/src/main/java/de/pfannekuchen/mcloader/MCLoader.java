@@ -8,18 +8,25 @@ import org.gradle.api.Task;
 
 import de.pfannekuchen.mcloader.tasks.LaunchTask;
 
+/**
+ * Gradle Plugin Class that loads a Task
+ * @author Pancake
+ */
 public class MCLoader implements Plugin<Project> {
 
+	/** TODO: Read this from the build.gradle */
 	public static final String MODLOADERVERSION = "1343"; // 1343 is the DATA VERSION of Minecraft 1.12.2
+	/** Current Directory where Gradle Task is being executed from. */
 	public static File rootDir;
 	
 	@Override
 	public void apply(Project project) {
-		rootDir = project.getProjectDir();
+		rootDir = project.getProjectDir(); // Get Project Dir for LaunchTask
 		
-		Task t = project.getTasks().create("launch", LaunchTask.class);
-		t.setGroup("mcloader");
-		t.dependsOn("jar");
+		/* Create launch Task */
+		Task t = project.getTasks().create("launch", LaunchTask.class); // Create a new Task executing LaunchTask.class
+		t.setGroup("mcloader");											// Set Group of 'launch' Task and
+		t.dependsOn("jar");												// make sure 'jar' is being executed before that
 	}
 
 }
