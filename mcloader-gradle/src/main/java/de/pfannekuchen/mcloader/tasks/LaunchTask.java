@@ -32,7 +32,7 @@ public class LaunchTask extends DefaultTask {
 		} catch (IOException | AttachNotSupportedException | AgentLoadException | AgentInitializationException e) {
 			e.printStackTrace();
 		}
-		return false;
+		throw new RuntimeException("No Minecraft running.");
 	}
 
 	private boolean identifyMinecraft(String user_dir, VirtualMachine vm) throws FileNotFoundException, IOException, AgentLoadException, AgentInitializationException {
