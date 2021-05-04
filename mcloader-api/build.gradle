@@ -6,13 +6,7 @@ plugins {
 
 // Group and Version for Gradle Plugin
 group = 'de.pfannekuchen.mcloader'
-version = '1.0.0-SNAPSHOT'
-
-// Export Location
-jar {
-	destinationDirectory = new File("../")
-	archiveFileName = "mcloader-api.jar"
-}
+version = '1.0.0'
 
 // Publishing
 publishing {
@@ -22,4 +16,33 @@ publishing {
         	artifactId = 'mcloader-api'
     	}
 	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+configurations {
+	include
+}
+
+dependencies {
+    // Javassist
+    include group: 'org.javassist', name: 'javassist', version: '3.27.0-GA'
+    // Javatuples
+	include group: 'org.javatuples', name: 'javatuples', version: '1.2'
+	
+	configurations.implementation.extendsFrom(configurations.include)
+}
+
+// Export Location
+jar {
+	destinationDirectory = new File("../")
+	archiveFileName = "mcloader-api.jar"
+	from (configurations.include.collect { entry -> zipTree(entry) }) {
+        exclude 'META-INF/MANIFEST.MF'
+        exclude 'META-INF/*.SF'
+        exclude 'META-INF/*.DSA'
+        exclude 'META-INF/*.RSA'
+    }
 }
