@@ -14,8 +14,6 @@ import de.pfannekuchen.mcloader.tasks.LaunchTask;
  */
 public class MCLoader implements Plugin<Project> {
 
-	/** TODO: Read this from the build.gradle */
-	public static final String MODLOADERVERSION = "1343"; // 1343 is the DATA VERSION of Minecraft 1.12.2
 	/** Current Directory where Gradle Task is being executed from. */
 	public static File rootDir;
 	

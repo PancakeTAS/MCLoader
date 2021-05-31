@@ -4,11 +4,9 @@ import java.awt.FileDialog;
 import java.awt.Frame;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Map.Entry;
-import java.util.Properties;
 
 import javax.swing.JOptionPane;
 
@@ -24,9 +22,6 @@ import com.sun.tools.attach.VirtualMachineDescriptor;
  */
 public class MCLoaderApp {
 
-	// TODO: Read this from the Mod Jar.
-	public static final String MODLOADERVERSION = "1343"; // 1343 is the DATA VERSION of Minecraft 1.12.2
-	
 	/**
 	 * Main-Method
 	 * 
@@ -66,19 +61,12 @@ public class MCLoaderApp {
 	 * Try to see if options.txt gives us the wanted Version.
 	 */
 	private static boolean identifyMinecraft(String user_dir, VirtualMachine vm) throws FileNotFoundException, IOException, AgentLoadException, AgentInitializationException {
-		/* Check 'version' from options.txt to be MODLOADERVERSION */
-		File minecraftFolder = new File(user_dir);
-		Properties props = new Properties();
-		props.load(new FileReader(new File(minecraftFolder, "options.txt"))); 							// Load File as intended
-		if (props.getProperty("version", "-1").equals(MCLoaderApp.MODLOADERVERSION)) {					// And check the 'version' Property from it.
-			FileDialog dialog = new FileDialog((Frame) null, "Choose a mod to load", FileDialog.LOAD);	// Then, if it's the correct one, open a File Picker.
-			/* Ask the User to select the Mod File and load it */
-			dialog.setVisible(true);
-			vm.loadAgent(dialog.getFiles()[0].getAbsolutePath()); // Load Agent to JVM
-			vm.detach();
-			return true;
-		}
-		return false;
+		FileDialog dialog = new FileDialog((Frame) null, "Choose a mod to load", FileDialog.LOAD);	// Then, if it's the correct one, open a File Picker.
+		/* Ask the User to select the Mod File and load it */
+		dialog.setVisible(true);
+		vm.loadAgent(dialog.getFiles()[0].getAbsolutePath()); // Load Agent to JVM
+		vm.detach();
+		return true;
 	}
 	
 	/** Detected Java 1.8 java.exe from {@link #findJRE8()} */

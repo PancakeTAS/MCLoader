@@ -2,12 +2,9 @@ package de.pfannekuchen.mcloader.tasks;
 
 import java.awt.FileDialog;
 import java.awt.Frame;
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.Map.Entry;
-import java.util.Properties;
 
 import org.gradle.api.DefaultTask;
 import org.gradle.api.tasks.TaskAction;
@@ -17,8 +14,6 @@ import com.sun.tools.attach.AgentLoadException;
 import com.sun.tools.attach.AttachNotSupportedException;
 import com.sun.tools.attach.VirtualMachine;
 import com.sun.tools.attach.VirtualMachineDescriptor;
-
-import de.pfannekuchen.mcloader.MCLoader;
 
 /**
  * Task that tries to find Minecraft and attach an agent to it.
@@ -46,19 +41,12 @@ public class LaunchTask extends DefaultTask {
 	 * Try to see if options.txt gives us the wanted Version.
 	 */
 	private boolean identifyMinecraft(String user_dir, VirtualMachine vm) throws FileNotFoundException, IOException, AgentLoadException, AgentInitializationException {
-		/* Check 'version' from options.txt to be MODLOADERVERSION */
-		File minecraftFolder = new File(user_dir);
-		Properties props = new Properties();
-		props.load(new FileReader(new File(minecraftFolder, "options.txt"))); 							// Load File as intended
-		if (props.getProperty("version", "-1").equals(MCLoader.MODLOADERVERSION)) {						// And check the 'version' Property from it.
-			FileDialog dialog = new FileDialog((Frame) null, "Choose a mod to load", FileDialog.LOAD);	// Then, if it's the correct one, open a File Picker.
-			/* Ask the User to select the Mod File and load it */
-			dialog.setVisible(true);
-			vm.loadAgent(dialog.getFiles()[0].getAbsolutePath()); // Load Agent to JVM
-			vm.detach();
-			return true;
-		}
-		return false;
+		FileDialog dialog = new FileDialog((Frame) null, "Choose a mod to load", FileDialog.LOAD);	// Then, if it's the correct one, open a File Picker.
+		/* Ask the User to select the Mod File and load it */
+		dialog.setVisible(true);
+		vm.loadAgent(dialog.getFiles()[0].getAbsolutePath()); // Load Agent to JVM
+		vm.detach();
+		return true;
 	}
 	
 }

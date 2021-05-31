@@ -21,7 +21,7 @@ public class CallbackTransformer implements ClassFileTransformer {
 	
 	/** List of Callbacks */
 	public static LinkedHashMap<Triplet<Class<?>, String, Boolean>, Runnable> callbacks = new LinkedHashMap<>();
-	/** List of Runnables with index TODO: There's gotta be a better way to do this! */
+	/** List of Runnables with index */
 	private static ArrayList<Runnable> references = new ArrayList<>();
 	
 	/** Class Pool for Javassist */

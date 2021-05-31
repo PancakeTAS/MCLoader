@@ -24,7 +24,7 @@ public class JavaAgent {
 	public static void agentmain(String agentArgs, Instrumentation inst) {
 		/* Run Mod Initialization */
 		try {
-			Mod instance = (Mod) Class.forName("entry.EntryPoint").newInstance(); // Create a new Instance from the EntryPoint of the Mod. TODO: Load this from build.gradle/JAR-Manifest/agentArgs
+			Mod instance = (Mod) Class.forName("entry.EntryPoint").newInstance(); // Create a new Instance from the EntryPoint of the Mod.
 			instance.onInitialization(agentArgs, inst);
 			CallbackTransformer.callbacks = instance.getCallbacks(new LinkedHashMap<Triplet<Class<?>, String, Boolean>, Runnable>()); // Get all Callbacks for the Mod
 			RedirectTransformer.redirects = instance.getRedirects(new LinkedHashMap<Triplet<Class<?>, String, String>, String>()); // Get all Redirects for the Mod
