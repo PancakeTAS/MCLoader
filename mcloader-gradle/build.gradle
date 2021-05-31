@@ -6,7 +6,7 @@ plugins {
 
 // Group and Version for Gradle Plugin
 group = 'de.pfannekuchen.mcloader'
-version = '1.0.0'
+version = '1.1.0'
 
 // Gradle Plugin
 gradlePlugin {
@@ -29,19 +29,7 @@ dependencies {
     implementation group: 'com.sun.tools', name: 'attach', version: 'java8'
     // Gradle Plugin API
     implementation gradleApi()
-    
-    // JUnit Engine for Testing
-	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
 }
-
-// JUnit 5 for Testing
-test {
-	useJUnitPlatform()
-}
-9
-// Always execute Tests
-tasks.test.outputs.upToDateWhen { return false }
 
 // Publishing
 publishing {
