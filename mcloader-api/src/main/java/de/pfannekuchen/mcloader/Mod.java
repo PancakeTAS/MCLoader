@@ -23,4 +23,11 @@ public interface Mod {
 		return callbacks;
 	}
 	
+	/**
+	 * List of Redirects to Transform
+	 */
+	default LinkedHashMap<Triplet<Class<?>, String, String>, String> getRedirects(LinkedHashMap<Triplet<Class<?>, String, String>, String> methodredirects) throws Exception {
+		return methodredirects;
+	}
+	
 }
