@@ -1,4 +1,0 @@
-rootProject.name = 'MCLoader'
-include 'mcloader-gradle'
-include 'mcloader-api'
-include 'mcloader-standalone'

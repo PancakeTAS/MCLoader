@@ -1,0 +1,49 @@
+plugins {
+	id 'java-library'
+	id 'maven-publish'
+}
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
+repositories {
+	maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
+}
+
+dependencies {
+	implementation group: 'org.spongepowered', name: 'mixin', version: '0.7.11-SNAPSHOT'
+	implementation  (group: 'net.minecraft', name: 'launchwrapper', version: '1.11') {
+		exclude module: 'lwjgl'
+	}
+}
+
+jar {
+    manifest {
+        attributes("Agent-Class": "de.pfannekuchen.mcloader.agent.JavaAgent", "Can-Redefine-Classes": "true", "Can-Retransform-Classes": "true", "Premain-Class": "de.pfannekuchen.mcloader.agent.JavaAgent")
+    }
+}
+
+// Publishing
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = 'de.pfannekuchen'
+            artifactId = 'mcloader'
+            version = '2.0.0'
+
+            from components.java
+        }
+    }
+}
+
+project.getAllTasks(true).each { key, val -> 
+	val.each {
+		it.group = null
+	}	
+}
+
+tasks.getByName("build").group = "mcloader"
+tasks.getByName("javadoc").group = "mcloader"
+tasks.getByName("publishToMavenLocal").group = "mcloader"
