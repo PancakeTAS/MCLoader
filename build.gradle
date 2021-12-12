@@ -1,36 +1,74 @@
 plugins {
-	id 'java-library'
+	// Apply Gradle Java Plugin for the gradle plugin
+	id 'java-gradle-plugin'
+	// Apply the maven publish plugin for publishing the gradle plugin
 	id 'maven-publish'
 }
 
+sourceCompatibility = targetCompatibility = 1.8;
+
+group = 'de.pfannekuchen'
+version = '1.0.0-SNAPSHOT'
+archivesBaseName = 'mcloader'
+
+// Repositories for dependencies
+repositories {
+	maven { url = "https://maven.mgnet.work" }
+	mavenCentral()
+}
+
+// Dependencies
+dependencies {
+	// Gradle Plugin API
+    implementation gradleApi()
+    // Special Source for deobfuscation
+    implementation group: 'net.md-5', name: 'SpecialSource', version: '1.11.0'
+    // Minecraft Launcher for launching minecraft
+    implementation group: 'de.pfannekuchen', name: 'launcher', version: '1.0.0-SNAPSHOT'
+    // Use GSON for easy JSON reading
+	implementation 'com.google.code.gson:gson:2.8.8'
+	// Use Zip4J for easy unzipping
+	implementation 'net.lingala.zip4j:zip4j:2.9.0'
+	// Forge Flower for decompiling
+	implementation 'net.fabricmc:fabric-fernflower:1.0.1'
+}
+
+// Make it export with a javadoc and sources jar
 java {
     withJavadocJar()
     withSourcesJar()
 }
 
-repositories {
-    maven { url = 'https://maven.mgnet.work'}
+// Plugin Info
+gradlePlugin {
+    plugins {
+        mcloader {
+            id = 'mcloader'
+            implementationClass = 'de.pfannekuchen.mcloader.MCLoaderPlugin'
+        }
+    }
 }
 
 // Publishing
 publishing {
     publications {
-        maven(MavenPublication) {
-            groupId = 'de.pfannekuchen'
-            artifactId = 'mcloader'
-            version = '1.0.0-SNAPSHOT'
-
+        mavenJava(MavenPublication) {
+        	groupId = project.group
+        	version = project.version
+        	artifactId = project.archivesBaseName
             from components.java
         }
     }
 }
 
-project.getAllTasks(true).each { key, val -> 
-	val.each {
-		it.group = null
-	}	
+// Show only a few tasks
+afterEvaluate {
+	// Hide all tasks by putting them into the 'null' group
+	project.getAllTasks(true).each { key, val -> 
+		val.each {
+			it.group = null
+		}	
+	}
+	tasks.getByName("build").group = "mcloader"
+	tasks.getByName("publishToMavenLocal").group = "mcloader"
 }
-
-tasks.getByName("build").group = "mcloader"
-tasks.getByName("javadoc").group = "mcloader"
-tasks.getByName("publishToMavenLocal").group = "mcloader"
