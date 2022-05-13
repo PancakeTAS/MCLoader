@@ -52,11 +52,6 @@ public class MCLoaderPlugin implements Plugin<Project> {
 	private File cache;
 	
 	/**
-	 * JVM Cache for all downloaded java virtual machines
-	 */
-	private File jvmCache;
-	
-	/**
 	 * Game File Cache for all game files of the current version
 	 */
 	private File gameCache;
@@ -98,7 +93,6 @@ public class MCLoaderPlugin implements Plugin<Project> {
 			if (!config.getWebsite().isPresent()) config.getWebsite().set("");
 			
 			cache = new File(project.getGradle().getGradleUserHomeDir(), "mcloader");
-			jvmCache = new File(cache, "jvmcache");
 			gameCache = new File(cache, "minecraft_" + config.getMcversion().get());
 			if (!gameCache.exists()) {
 				cache.mkdir();
@@ -258,7 +252,7 @@ public class MCLoaderPlugin implements Plugin<Project> {
 			if (version_json == null)
 				throw new Exception("Version not found");
 			
-			JsonDownloader.downloadDeps(gameCache, version_json, jvmCache);
+			JsonDownloader.downloadDeps(gameCache, version_json);
 			
 			// Download Mixin
 			Files.copy(new URL("https://repo.spongepowered.org/repository/maven-public/org/spongepowered/mixin/0.8.5/mixin-0.8.5-processor.jar").openStream(), new File(gameCache, "mixin-0.8.5-processor.jar").toPath());

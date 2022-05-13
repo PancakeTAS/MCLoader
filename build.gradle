@@ -6,6 +6,7 @@ plugins {
 }
 
 sourceCompatibility = targetCompatibility = 1.8;
+sourceCompatibility = targetCompatibility = 1.8
 
 group = 'de.pfannekuchen'
 version = '1.0.0-SNAPSHOT'
@@ -24,11 +25,11 @@ dependencies {
     // Special Source for deobfuscation
     implementation group: 'net.md-5', name: 'SpecialSource', version: '1.11.0'
     // Minecraft Launcher for launching minecraft
-    implementation group: 'de.pfannekuchen', name: 'launcher', version: '1.0.0-SNAPSHOT'
+    implementation group: 'de.pfannekuchen', name: 'launcher', version: '1.0.0'
     // Use GSON for easy JSON reading
-	implementation 'com.google.code.gson:gson:2.8.8'
+	implementation 'com.google.code.gson:gson:2.9.0'
 	// Use Zip4J for easy unzipping
-	implementation 'net.lingala.zip4j:zip4j:2.9.0'
+	implementation 'net.lingala.zip4j:zip4j:2.10.0'
 	// Forge Flower for decompiling
 	implementation 'net.fabricmc:fabric-fernflower:1.0.1'
 }
