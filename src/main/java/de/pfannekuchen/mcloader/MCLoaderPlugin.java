@@ -1,6 +1,7 @@
 package de.pfannekuchen.mcloader;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -18,7 +19,6 @@ import java.util.Map;
 import org.gradle.api.JavaVersion;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
-import org.gradle.api.artifacts.ModuleDependency;
 import org.gradle.api.plugins.JavaPluginExtension;
 import org.jetbrains.java.decompiler.main.decompiler.BaseDecompiler;
 import org.jetbrains.java.decompiler.main.decompiler.PrintStreamLogger;
@@ -113,26 +113,15 @@ public class MCLoaderPlugin implements Plugin<Project> {
 					maven.setUrl(new URI("https://repo.spongepowered.org/repository/maven-public/"));
 				} catch (URISyntaxException e) { e.printStackTrace(); }
 			});
-			project.getRepositories().maven(maven -> {
-				try {
-					maven.setName("Minecraft Launchwrapper Maven");
-					maven.setUrl(new URI("https://libraries.minecraft.net/"));
-				} catch (URISyntaxException e) { e.printStackTrace(); }
-			});
-			project.getDependencies().add("implementation", project.files((Object[]) new File(gameCache, "libraries").listFiles()));
-			project.getDependencies().add("implementation", "net.minecraft.client:client-deobf:");
-			project.getDependencies().add("implementation", project.files((Object[]) new File[] {new File(gameCache, "mixin-0.8.5.jar")}));
-			project.getDependencies().add("implementation", "com.google.code.gson:gson:2.2.4");
-			project.getDependencies().add("implementation", "org.ow2.asm:asm-tree:9.2");
-			project.getDependencies().add("implementation", "org.ow2.asm:asm-commons:9.2");
-			project.getDependencies().add("implementation", "org.ow2.asm:asm-util:9.2");
-			((ModuleDependency) project.getDependencies().add("implementation", "net.minecraft:launchwrapper:1.11")).exclude(new HashMap<String, String>() {{
-				put("module", "lwjgl");
-				put("module", "asm-debug-all");
-				put("module", "jopt-simple");
-				put("module", "log4j-core");
-				put("module", "log4j-api");
-			}});
+			project.getConfigurations().getByName("implementation").extendsFrom(project.getConfigurations().create("mcloader"));
+			project.getDependencies().add("compileOnly", "net.minecraft.client:client-deobf:");
+			project.getDependencies().add("compileOnly", project.files((Object[]) new File(gameCache, "libraries").listFiles()));
+			project.getDependencies().add("mcloader", project.files((Object[]) new File[] {new File(gameCache, "mixin-0.8.5.jar")}));
+			project.getDependencies().add("mcloader", "com.google.code.gson:gson:2.2.4");
+			project.getDependencies().add("mcloader", "com.google.guava:guava:21.0");
+			project.getDependencies().add("mcloader", "org.ow2.asm:asm-tree:9.2");
+			project.getDependencies().add("mcloader", "org.ow2.asm:asm-commons:9.2");
+			project.getDependencies().add("mcloader", "org.ow2.asm:asm-util:9.2");
 			
 			// Export javadoc and sources jar
 			project.getExtensions().getByType(JavaPluginExtension.class).withJavadocJar();
@@ -141,6 +130,18 @@ public class MCLoaderPlugin implements Plugin<Project> {
 			// Add Task Hider after evaluation
 			project.getAllTasks(true).forEach((_p2, taskSet) -> taskSet.forEach(task -> task.setGroup(null))); // after evaluate -> foreach project -> foreach task
 			project.getTasksByName("build", true).forEach(t -> t.setGroup("mcloader"));
+			
+			// TEST
+			// Create Launch files
+			File launchFile = new File(project.getProjectDir(), "Minecraft.launch");
+			if (!launchFile.exists()) {
+				try {
+					// Prepare Launch Files
+					Files.write(launchFile.toPath(), Utils.createLaunchFile(project.getProjectDir(), new File(gameCache, "natives"), new File(gameCache, "assets"), config.getGroup().get() + "." + config.getId().get() + ".EntryPoint", new File(gameCache, "mixin-0.8.5.jar"), project.getConfigurations().getByName("mcloader").getAsFileTree()).getBytes(), StandardOpenOption.WRITE, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
 		});
 		// Add Extension
 		project.getExtensions().add("mcloader", MCLoaderExtension.class);
@@ -225,9 +226,6 @@ public class MCLoaderPlugin implements Plugin<Project> {
 			// Move Stuff around
 			new File(decomp_jar, "client-deobf.jar").renameTo(new File(decomp_jar, "client-deobf-sources.jar"));
 			deobf_jar.renameTo(new File(decomp_jar, "client-deobf.jar"));
-			
-			// Prepare Launch Files
-			Files.write(new File(p.getProjectDir(), "Minecraft.launch").toPath(), Utils.createLaunchFile(p.getProjectDir(), new File(gameCache, "natives"), new File(gameCache, "assets"), config.getGroup().get() + "." + config.getId().get() + ".EntryPoint", new File(gameCache, "mixin-0.8.5.jar")).getBytes(), StandardOpenOption.WRITE, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
 		} catch (Exception e) {
 			System.err.println("Unable to deobfuscate/decompile the client");
 			e.printStackTrace();
