@@ -131,7 +131,6 @@ public class MCLoaderPlugin implements Plugin<Project> {
 			project.getAllTasks(true).forEach((_p2, taskSet) -> taskSet.forEach(task -> task.setGroup(null))); // after evaluate -> foreach project -> foreach task
 			project.getTasksByName("build", true).forEach(t -> t.setGroup("mcloader"));
 			
-			// TEST
 			// Create Launch files
 			File launchFile = new File(project.getProjectDir(), "Minecraft.launch");
 			if (!launchFile.exists()) {
