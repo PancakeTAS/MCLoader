@@ -101,6 +101,12 @@ public class MCLoaderPlugin implements Plugin<Project> {
 				// Deobfuscate and decompile client if the cache folder does not exist
 				deobfuscateGame(project);
 			}
+			// Update MCLoader-API
+			try {
+				Files.copy(MCLoaderPlugin.class.getResourceAsStream("/MCLoader-API.jar"), new File(gameCache, "mcloaderapi.jar").toPath(), StandardCopyOption.REPLACE_EXISTING);
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
 			// Add Dependencies
 			project.getRepositories().flatDir(flat -> {
 				flat.setName("Local Maven");
@@ -116,7 +122,9 @@ public class MCLoaderPlugin implements Plugin<Project> {
 			project.getConfigurations().getByName("implementation").extendsFrom(project.getConfigurations().create("mcloader"));
 			project.getDependencies().add("compileOnly", "net.minecraft.client:client-deobf:");
 			project.getDependencies().add("compileOnly", project.files((Object[]) new File(gameCache, "libraries").listFiles()));
-			project.getDependencies().add("mcloader", project.files((Object[]) new File[] {new File(gameCache, "mixin-0.8.5.jar")}));
+			project.getDependencies().add("mcloader", project.files((Object[]) new File[] { new File(gameCache, "mcloaderapi.jar") }));
+			project.getDependencies().add("mcloader", "org.spongepowered:mixin:0.8.5");
+			project.getDependencies().add("mcloader", "org.spongepowered:mixin:0.8.5");
 			project.getDependencies().add("mcloader", "com.google.code.gson:gson:2.2.4");
 			project.getDependencies().add("mcloader", "com.google.guava:guava:21.0");
 			project.getDependencies().add("mcloader", "org.ow2.asm:asm-tree:9.2");

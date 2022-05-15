@@ -1,0 +1,27 @@
+plugins {
+	// Apply Gradle Java Plugin for the gradle plugin
+	id 'java-library'
+}
+
+sourceCompatibility = targetCompatibility = 1.8
+
+// Repositories for dependencies
+repositories {
+	maven { url = "https://repo.spongepowered.org/maven" }
+}
+
+// Dependencies
+dependencies {
+	compileOnly 'org.spongepowered:mixin:0.8.5'
+	compileOnly 'org.ow2.asm:asm-commons:9.2'
+}
+
+// Show no tasks
+afterEvaluate {
+	// Hide all tasks by putting them into the 'null' group
+	project.getAllTasks(true).each { key, val -> 
+		val.each {
+			it.group = null
+		}	
+	}
+}

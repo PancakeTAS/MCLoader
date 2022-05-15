@@ -61,6 +61,14 @@ publishing {
     }
 }
 
+// Create a Task that moves the API into the resources dir
+task updateAPI(type: Copy) {
+    from 'MCLoader-API/build/libs/MCLoader-API.jar'
+    into 'src/main/resources'
+}
+updateAPI.dependsOn = [":MCLoader-API:build"]
+build.dependsOn = ["updateAPI"]
+
 // Show only a few tasks
 afterEvaluate {
 	// Hide all tasks by putting them into the 'null' group
@@ -71,4 +79,5 @@ afterEvaluate {
 	}
 	tasks.getByName("build").group = "mcloader"
 	tasks.getByName("publishToMavenLocal").group = "mcloader"
+	tasks.getByName("updateAPI").group = "mcloader"
 }
