@@ -13,6 +13,7 @@ archivesBaseName = 'mcloader'
 
 // Repositories for dependencies
 repositories {
+	mavenLocal()
 	maven { url = "https://maven.mgnet.work" }
 	mavenCentral()
 }
@@ -22,15 +23,17 @@ dependencies {
 	// Gradle Plugin API
     implementation gradleApi()
     // Special Source for deobfuscation
-    implementation group: 'net.md-5', name: 'SpecialSource', version: '1.11.0'
+    implementation 'de.pfannekuchen:specialsource:1.11.1'
     // Minecraft Launcher for launching minecraft
-    implementation group: 'de.pfannekuchen', name: 'launcher', version: '1.0.0'
+    implementation 'de.pfannekuchen:launcher:1.0.0'
+	// Forge Flower for decompiling
+	implementation 'de.pfannekuchen:fabric-fernflower:1.5.1'
     // Use GSON for easy JSON reading
 	implementation 'com.google.code.gson:gson:2.9.0'
 	// Use Zip4J for easy unzipping
 	implementation 'net.lingala.zip4j:zip4j:2.10.0'
-	// Forge Flower for decompiling
-	implementation 'net.fabricmc:fabric-fernflower:1.0.1'
+	// ASM for remapping
+	implementation 'org.ow2.asm:asm-commons:9.1'
 }
 
 // Make it export with a javadoc and sources jar

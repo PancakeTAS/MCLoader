@@ -2,7 +2,6 @@ package de.pfannekuchen.mcloader;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Constructor;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -20,11 +19,10 @@ import org.gradle.api.JavaVersion;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.plugins.JavaPluginExtension;
-import org.jetbrains.java.decompiler.main.decompiler.BaseDecompiler;
+import org.jetbrains.java.decompiler.main.collectors.VarNamesCollector;
+import org.jetbrains.java.decompiler.main.decompiler.ConsoleDecompiler;
 import org.jetbrains.java.decompiler.main.decompiler.PrintStreamLogger;
-import org.jetbrains.java.decompiler.main.extern.IBytecodeProvider;
 import org.jetbrains.java.decompiler.main.extern.IFernflowerPreferences;
-import org.jetbrains.java.decompiler.main.extern.IResultSaver;
 
 import com.google.gson.Gson;
 
@@ -177,6 +175,8 @@ public class MCLoaderPlugin implements Plugin<Project> {
 			JarMapping jarmapping = new JarMapping();
 			jarmapping.loadMappings(mappings);
 			
+			VarNamesCollector.params = jarmapping.params;
+			
 			JarRemapper jarremapper = new JarRemapper(jarmapping);
 			
 			// Classpath for deobfuscation
@@ -205,7 +205,7 @@ public class MCLoaderPlugin implements Plugin<Project> {
 	        mapOptions.put(IFernflowerPreferences.DECOMPILE_INNER, "1");
 	        mapOptions.put(IFernflowerPreferences.DECOMPILE_GENERIC_SIGNATURES, "1");
 	        mapOptions.put(IFernflowerPreferences.ASCII_STRING_CHARACTERS, "1");
-	        mapOptions.put(IFernflowerPreferences.THREADS, "" + (Runtime.getRuntime().availableProcessors()/2));
+	        mapOptions.put(IFernflowerPreferences.THREADS, "" + Runtime.getRuntime().availableProcessors());
 	        mapOptions.put(IFernflowerPreferences.DECOMPILE_GENERIC_SIGNATURES, "1");
 	        mapOptions.put(IFernflowerPreferences.REMOVE_SYNTHETIC, "1");
 	        mapOptions.put(IFernflowerPreferences.REMOVE_BRIDGE, "1");
@@ -213,15 +213,8 @@ public class MCLoaderPlugin implements Plugin<Project> {
 	        mapOptions.put(IFernflowerPreferences.UNIT_TEST_MODE, "0");
 	        mapOptions.put(IFernflowerPreferences.MAX_PROCESSING_METHOD, "0");
 	        
-	        // ConsoleDecompiler is private ._.. We use reflection to create an instance
-	        Constructor<?> c = Class.forName("org.jetbrains.java.decompiler.main.decompiler.ConsoleDecompiler").getDeclaredConstructors()[0];
-	        c.setAccessible(true);
-	        PrintStreamLogger logger = new PrintStreamLogger(System.out);
-	        File temp_source = decomp_jar;
-	        Object consoledecompiler = c.newInstance(temp_source, mapOptions, logger);
-	        
 	        // Create the Decompiler Wrapper
-	        BaseDecompiler decompiler = new BaseDecompiler((IBytecodeProvider) consoledecompiler, (IResultSaver) consoledecompiler, mapOptions, logger);
+	        ConsoleDecompiler decompiler = new ConsoleDecompiler(decomp_jar, mapOptions, new PrintStreamLogger());
 	        decompiler.addSource(deobf_jar);
 	        for (File library : new File(gameCache, "libraries").listFiles()) {
 	        	decompiler.addLibrary(library);
